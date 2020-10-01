@@ -4,24 +4,8 @@ import face_recognition
 import os
 from datetime import datetime
 
-path = 'Known Images'
-images = []
-classnames = []
-myList = os.listdir(path)
-for cl in myList:
-    currImg = cv2.imread(f'{path}/{cl}')
-    images.append(currImg)
-    classnames.append(os.path.splitext(cl)[0])
-print('Starting Encoding')
 
-
-def findEncodings(images):
-    encodings = []
-    for img in images:
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        encoding = face_recognition.face_encodings(img)[0]
-        encodings.append(encoding)
-    return encodings
+cap = cv2.VideoCapture(0)
 
 
 def markAttendance(name):
@@ -37,10 +21,25 @@ def markAttendance(name):
             f.writelines(f'\n{name},{t}')
 
 
-EncodingsList = findEncodings(images)
-print('Finished Encoding')
+fileClassnames = open("ClassNames.txt", "r")
+classnames = []
+myList = fileClassnames.readlines()
+for i in myList:
+    classnames.append(i[0:-1])
 
-cap = cv2.VideoCapture(0)
+fileEncodings = open("Encodings.txt", "r")
+EncodingsList = []
+myList = fileEncodings.readlines()
+print(myList)
+code = []
+for i in myList:
+    if "--" not in i:
+        code.append(float(i[0:-1]))
+    else:
+        EncodingsList.append(code)
+        code = []
+print(EncodingsList)
+
 
 while True:
     success, img = cap.read()
@@ -58,7 +57,7 @@ while True:
             name = classnames[matchIndex]
             y1, x2, y2, x1 = faceLoc
             cv2.rectangle(img, (4*x1, 4*y1), (4*x2, 4*y2), (0, 0, 255), 2)
-            cv2.putText(img, name, (4*x1, 4*y1), cv2.FONT_HERSHEY_COMPLEX, 1, (0, 0, 255), 2)
+            cv2.putText(img, name, (4*x1, 4*y1-5), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
             markAttendance(name)
 
     cv2.imshow('Webcam', img)
