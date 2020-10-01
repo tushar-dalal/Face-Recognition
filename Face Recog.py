@@ -30,7 +30,6 @@ for i in myList:
 fileEncodings = open("Encodings.txt", "r")
 EncodingsList = []
 myList = fileEncodings.readlines()
-print(myList)
 code = []
 for i in myList:
     if "--" not in i:
@@ -38,7 +37,6 @@ for i in myList:
     else:
         EncodingsList.append(code)
         code = []
-print(EncodingsList)
 
 
 while True:
