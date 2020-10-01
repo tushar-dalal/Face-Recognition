@@ -5,3 +5,4 @@ The program starts with encoding process which takes some time, so reman patient
 Further improvements:
 optimize the encoding, separate it into a different py file and make it save the list of encodings into a file
 make the main program read that list from that file. This was we wont have to run the encoding again and again.
+So basically optimise the starting process.
